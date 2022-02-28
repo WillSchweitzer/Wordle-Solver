@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Wordle Solver</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body onload="init()">
+    <form id="word-input">
+        <input type="text" id="char1" maxlength="1" value="" autofocus>
+        <input type="text" id='char2' maxlength="1" value="">
+        <input type="text" id='char3' maxlength="1" value="">
+        <input type="text" id='char4' maxlength="1" value="">
+        <input type="text" id='char5' maxlength="1" value="">
+    </form>
+    <label for="disallowed-characters">Disallowed Characters</label>
+    <input name='disallowed-characters' type='text' id='disallowed-characters'>
+
+    <section>
+        <ul id="likely-words">
+
+        </ul>
+        <ul id="letter-histogram">
+
+        </ul>
+    </section>
+    <script src="wordle-solver-script.js"></script>
+</body>
+</html>
