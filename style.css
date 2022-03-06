@@ -7,14 +7,12 @@
 
     /* Colors */
     --green: #6aaa64;
+
+    /* Dimension */
+    --box-width: 65px;
 }
 
-#word-input {
-    display: flex;
-    justify-content: center;
-}
-
-#word-input > input {
+div.row > input {
     background-color: gray;
     width: 1.5rem;
     height: 1.5rem;
@@ -56,6 +54,7 @@ progress {
     appearance: none;
     display: flex;
     width: 300px;
+    opacity: 10.3%;
 }
 progress:after {
     padding-left: 0.5em;
@@ -64,4 +63,37 @@ progress:after {
 
 label {
     user-select: none;
+}
+
+.row {
+    display: flex;
+    margin: 0.5em auto;
+    gap: 0.25em;
+    justify-content: center;
+    max-width: 500px;
+    border-left: 5px solid transparent;
+}
+
+span.box {
+    width: var(--box-width);
+    height: var(--box-width);
+    padding: 10px;
+    margin: 2px;
+    font-size: var(--box-width);
+    text-transform: uppercase;
+    text-align: center;
+    user-select: none;
+    border: 1px solid lightgray;
+}
+
+div.active {
+    border-color: white;
+}
+div.active > span.box {
+    background-color: gray;
+    border-color: transparent;
+}
+
+span.allowed {
+    background-color:green;
 }

@@ -9,15 +9,102 @@ const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P
 const likelyWordsList = document.getElementById('likely-words');
 const likelyWordsArray = [];
 const numberOfLikelyWordsShown = 50;
+const numOfLetters = 5
+
+let element;
+let row = [];
+let word = [];
+let requiredCharacters = [];
 
 document.addEventListener('keydown', (e) => {
+    rowId = document.getElementById('row1');
+
+    if (keyIsAthruZ(e)) {
+        addLetterToWord(e.key)
+    }
+
     if (e.key === 'Enter') {
         update()
+        // if (rowId.classList.contains('active') && word.length === numOfLetters) {
+        //     rowId.classList.remove('active');
+        // }
     }
+
+    if (e.key === 'Backspace') {
+        removeLetterFromWord(e.key)
+    }
+    updateRow();
+
+    // if (e.key === 'Backspace') { row.pop(); }
+    // if (e.keyCode >= 65 && e.keyCode <= 90) row[row.length] = e.key
+    // console.log(row);
+    //
+    //
+
+
+    //
+    // if (e.key === 'Backspace') {
+    //
+    // }
+    // element =
+    //
+    // if (element.classList.contains('filled')) {
+    //     element = document.getElementById('char1')
+    // }
+    // element.innerHTML = e.key;
+    // element.classList.add('filled');
 })
+
+// for (var i = 0; i < numOfLetters; i++) {
+//     let letter = document.getElementById(`char${i}`)
+//
+//     letter.addEventListener('click', () => {
+//         if (letter.classList.contains('allowed')) {
+//             letter.classList.remove('allowed');
+//             return
+//         }
+//         letter.classList.add('allowed');
+//         console.log(word[i]);
+//         addRequiredCharacter(word[i], i);
+//     })
+// }
+
+// (var i = 0; i < numOfLetters; i++) {
+// //     statusEventListeners[i] = document.getElementById(boxes[i].id)
+// //
+// //     statusEventListeners[i].addEventListener("click", () => {
+// //         boxes[i].statusIndex = (boxes[i].statusIndex + 1) % status.length;
+// //         document.getElementById(boxes[i].id).style.backgroundColor = statusColor[boxes[i].statusIndex];
+// //     });
+// // }
+
+const addLetterToWord = (letter) => {
+    // Add letter to word array
+    if (word.length < numOfLetters) {
+        word[word.length] = letter;
+    }
+}
+
+const removeLetterFromWord = () => {
+    // Remove letter from word array
+    word.pop()
+}
+
+const keyIsAthruZ = (e) => {
+    return e.keyCode > 64 && e.keyCode < 91
+}
+
+const updateRow = () => {
+    for (let i = 0; i < numOfLetters; i++) {
+        element = document.getElementById(`char${i}`);
+        element.innerHTML = word[i] ? word[i] : null;
+    }
+}
+
 
 const init = () => {
     createHistogram()
+
 }
 
 const update = function() {
@@ -41,8 +128,8 @@ const update = function() {
     // Get letter predictions for focused spot
     updateHistogram()
 
-
-
+    // Display most likely letter for each spot
+    updateMostLikelyChars()
 
     // Dont recommend double letter words first
 }
@@ -112,8 +199,8 @@ const filterRequiredChars = () => {
 const getRequiredCharacters = () => {
     let array  = []
 
-    for (let i = 1; i <= 5; i++) {
-        array[i - 1] = document.getElementById(`char${i}`).value.toUpperCase()
+    for (let i = 0; i < numOfLetters; i++) {
+        array[i] = document.getElementById(`char${i}`).value.toUpperCase()
     }
 
     return array
@@ -138,7 +225,7 @@ const updateHistogram = () => {
 
     // Reorder the histogram in descending order
     // Temp: obfuscate letters based on how likely
-    //orderHistogram()
+    orderHistogram()
 }
 
 const clearHistogram = () => {
@@ -150,9 +237,11 @@ const clearHistogram = () => {
 }
 
 const getPercentages = () => {
+    // Get the focused input
     let focusInput = document.activeElement
 
-    id = focusInput.id.charAt(4) - 1
+    // Get the # value from the 'char#' id of the current element.
+    id = focusInput.id.charAt(4)
 
     alphabet.forEach((letter, i) => {
         let count = 0
@@ -165,6 +254,78 @@ const getPercentages = () => {
         }
         percentage = count / filteredWordList.length * 100
         document.getElementById(`histogramValue${i}`).value = Math.round(percentage * 100) / 100
-
     })
 }
+
+const orderHistogram = () => {
+    let maxValue = 0;
+    let mostLikelyLetter;
+
+    // Loop through every histogram bar and check the value
+    for (let i = 0; i < alphabet.length; i++) {
+        bar = document.getElementById(`histogramValue${i}`);
+
+        // If the histogram bar is the largest value, store the percentage chance and it's letter
+        if (bar.value > maxValue) {
+            maxValue = bar.value;
+            mostLikelyLetter = alphabet[i];
+        }
+    }
+
+    // Loop through every histogram bar and hide the 0% chance values
+    // Highlight the most likely next values
+    for (let i = 0; i < alphabet.length; i++) {
+        bar = document.getElementById(`histogramValue${i}`);
+        bar.style.opacity = (bar.value === 0) ? "20%" : "100%";
+        bar.style.color = (bar.value === maxValue) ? 'red' : 'inherit';
+    }
+}
+
+const updateMostLikelyChars = () => {
+    for (let q = 0; q < numOfLetters; q++) {
+        let highestCount = 0;
+        let mostLikelyLetter = '';
+
+        // Get a percentage liklihood of the first letter
+        alphabet.forEach((letter, i) => {
+            let count = 0;
+
+            for (var j = 0; j < filteredWordList.length; j++) {
+                // If a word from the filtered list has a letter at a specific spot that matches the letter we're looking at, increase the count.
+                if (filteredWordList[j].charAt(q).toUpperCase() === letter.toUpperCase()) {
+                    count++
+                }
+            }
+
+            if (count > highestCount) {
+                highestCount = count;
+                mostLikelyLetter = letter;
+            }
+        });
+        document.getElementById(`char${q}Guess`).innerHTML = mostLikelyLetter;
+    }
+}
+
+
+
+// const status = ['disallowed', 'allowed', 'required'];
+// const statusColor = ['gray', 'yellow', 'green'];
+// let boxes = [ ];
+// let statusEventListeners = [ ];
+//
+// for (var i = 0; i < numOfLetters; i++) {
+//     boxes[i] = {
+//         id: `char${i}`,
+//         row: i % numOfLetters,
+//         statusIndex: 0,
+//     }
+// }
+//
+// for (var i = 0; i < numOfLetters; i++) {
+//     statusEventListeners[i] = document.getElementById(boxes[i].id)
+//
+//     statusEventListeners[i].addEventListener("click", () => {
+//         boxes[i].statusIndex = (boxes[i].statusIndex + 1) % status.length;
+//         document.getElementById(boxes[i].id).style.backgroundColor = statusColor[boxes[i].statusIndex];
+//     });
+// }
