@@ -5,9 +5,30 @@
 <head>
     <title>Wordle Hacker</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/91368808da.js" crossorigin="anonymous"></script>
 </head>
 
 <body onload="init()">
+    <details>
+        <summary><i class="fas fa-cog"></i>Settings</summary>
+        <div class="setting-input">
+            <label for='wordle-words'>Only Wordle Words</label>
+            <input name='wordle-words' type='checkbox' id='wordle-words'>
+        </div>
+        <div class="setting-input">
+            <label for='disallowed-characters'><span class='mini-box disallowed'>W</span>Disallowed (Gray) Characters</label>
+            <input name='disallowed-characters' type='text' id='disallowed-characters'>
+        </div>
+        <div class="setting-input">
+            <label for='allowed-characters'><span class='mini-box allowed'>S</span>Allowed (Gold) Characters</label>
+            <input name='allowed-characters' type='text' id='allowed-characters'>
+        </div>
+        <!--
+        <label for='word-num'>Number of Word Recommendations</label>
+        <input name='word-num' type='number' id='word-num'>
+    -->
+    </details>
+
     <form id="word-input">
 
         <div class="row">
@@ -26,24 +47,11 @@
         </div>
     </form>
 
-    <label for="disallowed-characters">Disallowed Characters</label>
-    <input name='disallowed-characters' type='text' id='disallowed-characters'>
-    <br>
-    <label for="allowed-characters">Allowed Characters</label>
-    <input name='allowed-characters' type='text' id='allowed-characters'>
-    <br>
-    <label for="wordle-words">Only Wordle Words</label>
-    <input name='wordle-words' type='checkbox' id='wordle-words'>
-
-
     <section>
-        <ul id="likely-words">
-
-        </ul>
-        <ul id="letter-histogram">
-
-        </ul>
+        <ul id="likely-words"> </ul>
+        <ul id="letter-histogram"> </ul>
     </section>
+
     <script src="wordle-solver-script.js"></script>
 </body>
 </html>
